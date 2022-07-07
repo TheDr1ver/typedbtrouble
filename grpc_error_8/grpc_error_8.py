@@ -537,32 +537,6 @@ class Trouble():
 
         _log.info(f"Database {db_name} successfully generated and popoulated with dummy data.")
 
-    def process_query_answers(
-        self,
-        answers: object=None,
-        var: str = '',
-        ogq: Optional[str] = '',
-        tx: Optional[object] = None,
-        q: Optional[str] = '',
-        subvar: Optional[str] = '',
-    ):
-        _log = self.logger
-        for answer in answers:
-            concepts = answer.concepts()
-            for concept in concepts:
-                if concept.is_thing():
-                    concept_type = concept.get_type()
-                elif concept.is_type():
-                    concept_type = concept
-                print(f"Answer is {concept_type}")
-            val = answer.get(var)
-            print(f"Got ${var} value {val}")
-            if tx:
-                answers2 = tx.query().match(q)
-                # self.process_query_answers(answers2, subvar)
-                # This will loop indefinitely until it hopefully dies
-                self.process_query_answers(answers2, subvar, q, tx, ogq, var) 
-
     def write_things(
         self,
         db_name: str = '',
