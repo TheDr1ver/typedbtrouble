@@ -72,10 +72,10 @@ ValueError: Internal gRPC call error 8. Please report to https://github.com/grpc
 
 ## Environment
 
-1. Python 3.9.12
+1. Python 3.9.12 (Win 10)
 2. client-python v 2.9.0
 3. TypeDB 2.10.0
-4. TypeDB is running on localhost
+4. TypeDB is running on localhost (Win 10)
 
 ## Reproducible Steps
 
