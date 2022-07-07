@@ -696,8 +696,14 @@ class Trouble():
         self,
         concept,
         tx,
+        counter: Optional[int] = 0,
+        depth: Optional[int] = 0,
     ):
+        counter+=1
+        depth+=1
         _log=self.logger
+        # _log.warning(f"churn_concept counter: {counter}")
+        # _log.info(f"churn_concept depth: {depth}")
         if concept.is_thing():
             concept_type = concept.get_type()
         elif concept.is_type():
@@ -730,7 +736,7 @@ class Trouble():
             remote_concept = concept.as_remote(tx)
             has = remote_concept.get_has()
             for h in has:
-                self.churn_concept(h, tx)
+                counter = self.churn_concept(h, tx, counter, depth)
             rels = remote_concept.get_relations()
             for rel in rels:
                 rel_type = rel.get_type()
@@ -739,7 +745,7 @@ class Trouble():
                 rel.is_inferred()
                 rel_has = rel.as_remote(tx).get_has()
                 for rh in rel_has:
-                    self.churn_concept(rh, tx)
+                    counter = self.churn_concept(rh, tx, counter, depth)
 
         elif value=='role':
             remote_concept = concept.as_remote(tx)
@@ -750,15 +756,15 @@ class Trouble():
             remote_concept = concept.as_remote(tx)
             has = remote_concept.get_has()
             for h in has:
-                self.churn_concept(h, tx)
+                counter = self.churn_concept(h, tx, counter, depth)
 
             players = remote_concept.get_players_by_role_type()
             for role_concept, ent_concepts in players.items():
-                self.churn_concept(role_concept, tx)
+                counter = self.churn_concept(role_concept, tx, counter)
                 for ent_concept in ent_concepts:
-                    self.churn_concept(ent_concept, tx)
+                    counter = self.churn_concept(ent_concept, tx, counter, depth)
 
-        return True
+        return counter
 
     def churn(
         self,
@@ -795,7 +801,9 @@ class Trouble():
         # Churn results simultaneously
         # Set up threads
         thread1 = threading.Thread(target=self.churn, args=(tx, q1, var1))
+        thread1.name = 'thread1'
         thread2 = threading.Thread(target=self.churn, args=(tx, q2, var2))
+        thread2.name = 'thread2'
 
         # Call first search and while first search is processing, call a second
         _log.info(f"Starting test_three...")
