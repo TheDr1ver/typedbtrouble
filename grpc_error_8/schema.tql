@@ -1,0 +1,208 @@
+define
+
+    ############################
+    #### Relations
+    ############################
+
+    hntr-relation sub relation,
+        relates related,
+        plays hunt:found,
+        owns hunt-name,
+        owns note,
+        owns tag,
+        owns confidence,
+        owns date-seen,
+        owns first-seen,
+        owns last-seen;
+
+    hunt sub hntr-relation,
+        relates found,
+        owns hunt-active,
+        owns hunt-endpoint,
+        # owns hunt-name, 
+        owns hunt-service,
+        owns hunt-string,
+        owns first-hunted, 
+        owns last-hunted,
+        owns frequency;
+
+    ############################
+    #### Entities
+    ############################
+
+    hntr-entity sub entity, abstract,
+        plays hntr-relation:related,
+        plays hunt:found,
+        owns hunt-name,
+        owns note,
+        owns tag,
+        owns confidence,
+        owns date-seen,
+        owns first-seen,
+        owns last-seen;
+
+    hostname sub hntr-entity,
+        owns hunt-active,
+        owns fqdn @key;
+
+    ip sub hntr-entity,
+        owns hunt-active,
+        owns ip-address @key;
+
+    ssl sub hntr-entity,
+        owns fqdn, # used for storing SANs
+        owns fingerprint @key,
+        owns sha256,
+        owns issued-date,
+        owns expires-date,
+        owns issuer-c,
+        owns issuer-cn,
+        owns issuer-o,
+        owns issuer-l,
+        owns issuer-st,
+        owns issuer-ou,
+        owns pubkey-bits,
+        owns pubkey-type,
+        owns sig-alg,
+        owns version,
+        owns subject-c,
+        owns subject-cn,
+        owns subject-o,
+        owns subject-l,
+        owns subject-st,
+        owns subject-ou,
+        owns cipher-bits,
+        owns cipher-name,
+        owns ja3s;
+
+    jarm sub hntr-entity,
+        owns fingerprint @key,
+        owns jarm-cipher,
+        owns jarm-tls-ext;
+
+    ############################
+    #### Attributes
+    ############################
+
+    cipher-bits sub attribute,
+        value string;
+
+    cipher-name sub attribute,
+        value string;
+
+    confidence sub attribute,
+        value double;
+
+    date-seen sub attribute,
+        value datetime;
+
+    expires-date sub attribute,
+        value datetime;
+
+    fingerprint sub attribute,
+        value string;
+
+    first-hunted sub attribute,
+        value datetime;
+
+    first-seen sub attribute,
+        value datetime;
+
+    fqdn sub attribute,
+        value string;
+
+    frequency sub attribute,
+        value double;
+
+    hunt-active sub attribute,
+        value boolean;
+
+    hunt-endpoint sub attribute,
+        value string;
+
+    hunt-name sub attribute,
+        value string;
+
+    hunt-service sub attribute,
+        value string;
+
+    hunt-string sub attribute,
+        value string;
+
+    ip-address sub attribute,
+        value string;
+
+    issued-date sub attribute,
+        value datetime;
+
+    issuer-c sub attribute,
+        value string;
+
+    issuer-cn sub attribute,
+        value string;
+
+    issuer-o sub attribute,
+        value string;
+
+    issuer-l sub attribute,
+        value string;
+
+    issuer-st sub attribute,
+        value string;
+
+    issuer-ou sub attribute,
+        value string;
+
+    ja3s sub attribute,
+        value string;
+
+    jarm-cipher sub attribute,
+        value string;
+
+    jarm-tls-ext sub attribute,
+        value string;
+
+    last-hunted sub attribute,
+        value datetime;
+
+    last-seen sub attribute,
+        value datetime;
+
+    note sub attribute,
+        value string;
+
+    pubkey-bits sub attribute,
+        value double;
+
+    pubkey-type sub attribute,
+        value string;
+
+    sha256 sub attribute,
+        value string;
+
+    sig-alg sub attribute,
+        value string;
+
+    subject-c sub attribute,
+        value string;
+
+    subject-cn sub attribute,
+        value string;
+
+    subject-o sub attribute,
+        value string;
+
+    subject-l sub attribute,
+        value string;
+
+    subject-st sub attribute,
+        value string;
+
+    subject-ou sub attribute,
+        value string;
+
+    tag sub attribute,
+        value string;
+
+    version sub attribute,
+        value string;
