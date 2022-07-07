@@ -1,5 +1,7 @@
 # Internal gRPC call error 8 during concurrent queries
 
+Ref: https://github.com/vaticle/typedb-client-python/issues/261
+
 ## Description
 
 Note this is quite possibly related to [#151](https://github.com/vaticle/typedb-client-python/issues/151), 
