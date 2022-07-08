@@ -2,6 +2,30 @@
 
 Ref: https://github.com/vaticle/typedb-client-python/issues/261
 
+## **[SOLVED]**
+
+Of course, after taking about a day and a half to put together a nice testing
+scenario I was able to find out a solution to my problem (though maybe not the
+underlying cause).
+
+Apparently I was just trying to do too much with a single open transaction. Once
+I opened a second transaction (and effectively, another client), I had no issues
+at all.
+
+A little background as to what caused this in the first place - I'm working on a
+web UI for my TypeDB-based tool, and I'm building it with Python Flask. The 
+issue would occur when I would launch a web page that took ~14 seconds for the
+background searches to fully complete. In the meantime, if someone were to click
+a link while the background process was churning, it would throw the `gRPC call
+error 8` error.
+
+Fortunately, creating this troubleshooting repo made it easy to test things that 
+had the potential to mitigate the error. Once I realized adding a new client
+for the second thread caused it to no longer be raised, I tested adding a new
+client handler for each Flask route entrypoint and sure enough, that fixed it!
+
+Case closed. Thanks for the public sounding board ;)
+
 ## Description
 
 Note this is quite possibly related to [#151](https://github.com/vaticle/typedb-client-python/issues/151), 
@@ -15,10 +39,11 @@ before the initial script has finished processing, it throws
 `Internal gRPC call error 8`. See below for the initial full traceback that 
 caused me to create this repo in the first place.
 
+
 ### Error Message
 
 ```
-In this particualr case, we're trying to generate something akin to the following error:
+In this particular case, we're trying to generate something akin to the following error:
 
 Traceback (most recent call last):
 File "C:\Users\user\.conda\envs\mgmtproj\Lib\site-packages\flask\app.py", line 2091, in __call__
@@ -97,7 +122,7 @@ to query the data and perform the transaction operations necessary to convert
 the TypeDB data into its corresponding Python objects (the object frameworks 
 are not included or necessary for the purpose of this exercise).
 
-While the initial thread is proccessing, as soon as the second thread is called 
+While the initial thread is processing, as soon as the second thread is called 
 it will throw the aforementioned error, causing the initial results not to return.
 
 ## Expected Output

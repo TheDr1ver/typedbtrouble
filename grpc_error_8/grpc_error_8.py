@@ -1,19 +1,16 @@
 import logging, logging.handlers
-import copy
 import os
 import random
 import string
 import threading
 
-
-# leaving this here as a note
+# leaving this here as a note for future testing
 # from importlib import reload
 # reload(<module>)
 
 from datetime import datetime, timezone
 
 from pprint import pformat
-from time import sleep
 
 from typedb.client import (
     TypeDB, 
@@ -793,6 +790,9 @@ class Trouble():
         # Reproduce issues here
 
         tx, session = self.create_tx()
+        # Adding this second tx and session, then using it inside thread2 was
+        # ultimately what fixed it.
+        tx2, session2 = self.create_tx()
         q1 = "match $hunt($found) isa hunt, has hunt-string $hs, has attribute $hattr;"
         var1 ="hs"
         q2 = "match $hunt($found) isa hunt, has hunt-endpoint $he, has attribute $hattr;"
@@ -802,7 +802,7 @@ class Trouble():
         # Set up threads
         thread1 = threading.Thread(target=self.churn, args=(tx, q1, var1))
         thread1.name = 'thread1'
-        thread2 = threading.Thread(target=self.churn, args=(tx, q2, var2))
+        thread2 = threading.Thread(target=self.churn, args=(tx2, q2, var2))
         thread2.name = 'thread2'
 
         # Call first search and while first search is processing, call a second
@@ -813,9 +813,8 @@ class Trouble():
         thread2.start()
         _log.info(f"Done test_three!")
 
-
 if __name__=="__main__":
 
-    # Populate a dummy database
+    # Populate a dummy database and run tests against it
     t = Trouble()
     t.test_three()
